@@ -1,10 +1,8 @@
 package com.microservice.sales.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,14 +26,14 @@ public class Orden {
 
     private String codigoSeguimiento;
 
-    private LocalDate fecha;
+    private LocalDateTime fecha;
 
     private String estado; // Pendiente, Enviado, Entregado, Cancelado
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<ItemOrden> itemsOrden = new ArrayList<>();
+    private List<ItemOrden> items;
 
-    private Double totalOrden;
+    private Double total;
 
     private String clienteId;
 }

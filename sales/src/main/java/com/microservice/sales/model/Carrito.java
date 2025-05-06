@@ -1,10 +1,8 @@
 package com.microservice.sales.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +30,6 @@ public class Carrito {
     private boolean finalizado;
 
     @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemCarrito> itemsCarrito = new ArrayList<>();
+    private List<ItemCarrito> items;
     
 }

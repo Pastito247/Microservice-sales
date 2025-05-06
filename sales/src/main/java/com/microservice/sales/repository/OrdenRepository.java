@@ -9,5 +9,5 @@ import com.microservice.sales.model.Orden;
 
 public interface OrdenRepository extends JpaRepository<Orden, Long>{
     Optional<Orden> findByCodigoSeguimiento(String codigoSeguimiento);
-    List<Orden> findByClienteId(Long clienteId);
+    List<Orden> findByClienteId(String clienteId);
 }

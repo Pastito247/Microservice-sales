@@ -11,5 +11,5 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
     List<Venta> findByCliente(String cliente);
     List<Venta> findBySucursal(String sucursal);
     List<Venta> findByEmpleado(String empleado);
-    List<Venta> findeByFechaBetween(LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    List<Venta> findByFechaBetween(LocalDateTime fechaInicio, LocalDateTime fechaFin);
 }
