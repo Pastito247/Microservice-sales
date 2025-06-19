@@ -1,0 +1,169 @@
+{
+    "info": {
+        "name": "Documentaci\u00f3n Microservicio Ventas",
+        "_postman_id": "ventas-collection-docs",
+        "description": "Colecci\u00f3n para probar y documentar el microservicio de ventas paso a paso.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Ventas",
+            "item": [
+                {
+                    "name": "Crear Venta",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"cliente\": \"cliente1\",\n    \"empleado\": \"empleado1\",\n    \"fecha\": \"2025-05-01T10:00:00\",\n    \"metodoPago\": \"Tarjeta\",\n    \"sucursal\": \"Sucursal 1\",\n    \"tipo\": \"ONLINE\",\n    \"total\": 12000.0\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/api/ventas",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "ventas"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Listar Ventas",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:8080/api/ventas",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "ventas"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Carrito",
+            "item": [
+                {
+                    "name": "Crear Carrito",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"clienteId\": \"cliente1\",\n    \"ultimaActualizacion\": \"2025-05-01T12:00:00\",\n    \"finalizado\": false\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8080/api/carrito",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "carrito"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Ordenes",
+            "item": [
+                {
+                    "name": "Crear Orden desde Carrito",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:8080/api/ordenes/desde-carrito/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "ordenes",
+                                "desde-carrito",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Facturas",
+            "item": [
+                {
+                    "name": "Generar Factura desde Venta",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:8080/api/facturas/generar/1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "facturas",
+                                "generar",
+                                "1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Cupones",
+            "item": [
+                {
+                    "name": "Validar Cup\u00f3n",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:8080/api/cupones/validar/DESC1",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8080",
+                            "path": [
+                                "api",
+                                "cupones",
+                                "validar",
+                                "DESC1"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

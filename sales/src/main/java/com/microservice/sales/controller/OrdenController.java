@@ -28,7 +28,7 @@ public class OrdenController {
 
     @PostMapping("/desde-carrito/{carritoId}")
     public ResponseEntity<Orden> crearOrdenDesdeCarrito(@PathVariable Long carritoId) {
-        Carrito carrito = carritoService.obtenerCarritoActivoPorCliente("cliente")  // puedes modificar esto
+        Carrito carrito = carritoService.obtenerCarritoActivoPorCliente("cliente")
                 .orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
         Orden orden = ordenService.crearOrdenDesdeCarrito(carrito);
         return ResponseEntity.ok(orden);
