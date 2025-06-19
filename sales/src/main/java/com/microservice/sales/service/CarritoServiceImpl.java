@@ -1,14 +1,16 @@
 package com.microservice.sales.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.microservice.sales.model.Carrito;
 import com.microservice.sales.model.ItemCarrito;
 import com.microservice.sales.repository.CarritoRepository;
-import com.microservice.sales.repository.ItemCarritoReposiory;
+import com.microservice.sales.repository.ItemCarritoRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,27 +20,42 @@ import lombok.RequiredArgsConstructor;
 public class CarritoServiceImpl implements CarritoService{
 
     private final CarritoRepository carritoRepository;
-    private final ItemCarritoReposiory itemCarritoRepository;
+    private final ItemCarritoRepository itemCarritoRepository;
 
-    @Override
+     @Override
     public Carrito crearCarrito(Carrito carrito) {
-        carrito.setUltimaActualizacion(LocalDateTime.now());
-        carrito.setFinalizado(false);
+        // Inicializar la lista si es necesario
+        if(carrito.getItems() == null) {
+            carrito.setItems(new ArrayList<>());
+        }
         return carritoRepository.save(carrito);
     }
 
-    @Override
+     @Override
     public Optional<Carrito> obtenerCarritoActivoPorCliente(String clienteId) {
-        return carritoRepository.findByClienteId(clienteId);
+        return carritoRepository.findByClienteIdAndFinalizadoFalse(clienteId);
     }
 
-    @Override
+     @Override
     public Carrito agregarItem(Long carritoId, ItemCarrito item) {
         Carrito carrito = carritoRepository.findById(carritoId)
-            .orElseThrow(() -> new RuntimeException("Carrito no encontrado"));
+            .orElseThrow(() -> new EmptyResultDataAccessException("Carrito no encontrado", 1));
+        
+        // Inicializar lista si es necesario
+        if(carrito.getItems() == null) {
+            carrito.setItems(new ArrayList<>());
+        }
+        
+        // Establecer relación bidireccional
         item.setCarrito(carrito);
+        carrito.getItems().add(item);
+        
+        // Guardar el ítem
         itemCarritoRepository.save(item);
-        return carritoRepository.findById(carritoId).get();
+        
+        // Actualizar carrito
+        carrito.setUltimaActualizacion(LocalDateTime.now());
+        return carritoRepository.save(carrito);
     }
 
     @Override
