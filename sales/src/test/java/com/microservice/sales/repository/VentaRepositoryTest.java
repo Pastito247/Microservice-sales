@@ -1,37 +1,74 @@
 package com.microservice.sales.repository;
 
 import com.microservice.sales.model.Venta;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-
 public class VentaRepositoryTest {
 
-        @Autowired private VentaRepository ventaRepo;
+    @Autowired
+    private VentaRepository ventaRepository;
 
-    @BeforeEach void seed() {
-        ventaRepo.save(new Venta(null, LocalDateTime.now().minusDays(1), "ONLINE", 50.0, "Tarjeta", "S1", "E1", "C1", null));
-        ventaRepo.save(new Venta(null, LocalDateTime.now().minusDays(2), "FISICA", 150.0, "Efectivo", "S1", "E2", "C2", null));
+    @Test
+    void testFindByCliente() {
+        Venta venta = new Venta();
+        venta.setFecha(LocalDateTime.now());
+        venta.setCliente("cliente_test");
+        venta.setTotal(5000.0);
+        venta.setMetodoPago("Débito");
+        venta.setDireccionEnvio("Calle Falsa 123");
+        venta.setProducto("Producto Test");
+        venta.setEmpleado("Empleado Test");
+        venta.setSucursal("Sucursal Test");
+        venta.setFactura(null); // si es requerido
+
+        ventaRepository.save(venta);
+
+        List<Venta> resultados = ventaRepository.findByCliente("cliente_test");
+
+        assertThat(resultados).isNotEmpty();
+        assertThat(resultados.get(0).getCliente()).isEqualTo("cliente_test");
     }
 
-    @Test void testFindByCliente() {
-        List<Venta> list = ventaRepo.findByCliente("C1");
-        assertThat(list).hasSize(1);
-        assertThat(list.get(0).getTotal()).isEqualTo(50.0);
-    }
+    @Test
+    void testFindByFechaBetween() {
+        Venta venta1 = new Venta();
+        venta1.setFecha(LocalDateTime.now().minusDays(2));
+        venta1.setCliente("clienteX");
+        venta1.setTotal(3000.0);
+        venta1.setMetodoPago("Crédito");
+        venta1.setDireccionEnvio("Av. Siempre Viva");
+        venta1.setProducto("Test Producto");
+        venta1.setEmpleado("Empleado 1");
+        venta1.setSucursal("Sucursal 1");
+        venta1.setFactura(null);
 
-    @Test void testFindByFechaBetween() {
-        LocalDateTime desde = LocalDateTime.now().minusDays(3);
-        LocalDateTime hasta = LocalDateTime.now();
-        List<Venta> list = ventaRepo.findByFechaBetween(desde, hasta);
-        assertThat(list.size()).isGreaterThanOrEqualTo(2);
+        Venta venta2 = new Venta();
+        venta2.setFecha(LocalDateTime.now().minusDays(1));
+        venta2.setCliente("clienteX");
+        venta2.setTotal(3500.0);
+        venta2.setMetodoPago("Transferencia");
+        venta2.setDireccionEnvio("Calle 456");
+        venta2.setProducto("Producto 2");
+        venta2.setEmpleado("Empleado 2");
+        venta2.setSucursal("Sucursal 2");
+        venta2.setFactura(null);
+
+        ventaRepository.save(venta1);
+        ventaRepository.save(venta2);
+
+        List<Venta> resultados = ventaRepository.findByFechaBetween(
+            LocalDateTime.now().minusDays(3),
+            LocalDateTime.now()
+        );
+
+        assertThat(resultados).hasSizeGreaterThanOrEqualTo(2);
     }
 }

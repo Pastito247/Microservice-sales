@@ -39,4 +39,8 @@ public class Venta {
     @OneToOne(cascade = CascadeType.ALL)
     private Factura factura;
 
+    private String direccionEnvio;
+
+    private String producto;
+
 }

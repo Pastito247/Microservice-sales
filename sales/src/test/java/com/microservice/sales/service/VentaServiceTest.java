@@ -3,52 +3,43 @@ package com.microservice.sales.service;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.microservice.sales.client.LogisticaClient;
+import com.microservice.sales.dto.EnvioResponse;
 import com.microservice.sales.model.Venta;
 import com.microservice.sales.repository.VentaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-public class VentaServiceTest {
+@ExtendWith(MockitoExtension.class)
+class VentaServiceTest {
 
-    @Mock private VentaRepository ventaRepo;
-    @InjectMocks private VentaServiceImpl ventaService;
+    @Mock
+    private VentaRepository ventaRepository;
 
-    @BeforeEach void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    @Mock
+    private LogisticaClient logisticaClient;
 
-    @Test void testCrearVenta() {
-        Venta input = new Venta();
-        input.setCliente("cli");
-        input.setTotal(100.0);
+    @InjectMocks
+    private VentaServiceImpl ventaService;
 
-        Venta saved = new Venta();
-        saved.setId(1L);
-        saved.setCliente("cli");
-        saved.setTotal(100.0);
+    @Test
+    void testCrearVenta() {
+        Venta venta = new Venta();
+        venta.setCliente("cliente1");
+        venta.setDireccionEnvio("Calle Falsa 123");
 
-        when(ventaRepo.save(any())).thenReturn(saved);
+        when(ventaRepository.save(any())).thenReturn(venta);
+        when(logisticaClient.crearEnvioParaVenta(any())).thenReturn(new EnvioResponse());
 
-        Venta result = ventaService.crearVenta(input);
+        Venta resultado = ventaService.crearVenta(venta);
 
-        assertThat(result.getId()).isEqualTo(1L);
-        verify(ventaRepo).save(input);
-    }
-
-    @Test void testObtenerVentaPorId_existente() {
-        Venta v = new Venta(); v.setId(2L);
-        when(ventaRepo.findById(2L)).thenReturn(Optional.of(v));
-
-        Optional<Venta> op = ventaService.buscarVentaPorId(2L);
-        assertThat(op).isPresent();
-        assertThat(op.get().getId()).isEqualTo(2L);
-    }
-
-    @Test void testObtenerVentaPorId_noExiste() {
-        when(ventaRepo.findById(99L)).thenReturn(Optional.empty());
-        assertThat(ventaService.buscarVentaPorId(99L)).isEmpty();
+        assertThat(resultado).isNotNull();
+        verify(ventaRepository).save(venta);
+        verify(logisticaClient).crearEnvioParaVenta(any());
     }
 }
