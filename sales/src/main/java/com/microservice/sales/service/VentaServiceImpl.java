@@ -1,11 +1,11 @@
 package com.microservice.sales.service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.microservice.sales.client.LogisticaClient;
@@ -27,13 +27,12 @@ public class VentaServiceImpl implements VentaService{
         Venta nueva = ventaRepository.save(venta);
         
         // Crear solicitud para logística
-        EnvioRequest envioRequest = new EnvioRequest();
-        envioRequest.setVentaId(nueva.getId());
-        envioRequest.setDireccionDestino(nueva.getDireccionEnvio()); // Si existe ese campo
-        envioRequest.setFechaEstimada(LocalDate.now().plusDays(3));
-        envioRequest.setEstado("EN PREPARACIÓN");
-        
-        logisticaClient.crearEnvioParaVenta(envioRequest);
+        EnvioRequest envio = new EnvioRequest();
+        envio.setCliente(nueva.getCliente());
+        envio.setEstado("EN PREPARACIÓN");
+        envio.setFechaCreacion(LocalDate.now());
+        envio.setUbicacionActual("Bodega principal"); // o null si se asigna en logística
+        logisticaClient.crearEnvioParaVenta(envio);
         
         return nueva;
     }
